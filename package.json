@@ -1,0 +1,10 @@
+{
+  "name": "vighnaharta-receipt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vighnaharta Property rent receipt generator",
+  "scripts": {
+    "build": "echo 'Static site — no build needed'",
+    "start": "python3 -m http.server 8765"
+  }
+}

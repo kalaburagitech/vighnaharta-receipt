@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vighnaharta Property - Rent Receipt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <h1>Rent Receipt Generator</h1>
+    <div class="toolbar-actions">
+      <button type="button" id="saveBtn" class="btn btn-green">Save (Temp)</button>
+      <button type="button" id="loadBtn" class="btn btn-outline">Load Saved</button>
+      <button type="button" id="clearBtn" class="btn btn-outline">Clear</button>
+      <button type="button" id="pdfBtn" class="btn btn-orange">Download PDF</button>
+    </div>
+    <p id="statusMsg" class="status-msg"></p>
+  </div>
+
+  <div class="page-wrapper">
+    <div id="receipt" class="receipt">
+      <!-- Header -->
+      <header class="receipt-header">
+        <div class="brand">
+          <img src="assets/logo.png" alt="Vighnaharta Property Logo" class="brand-logo">
+          <div class="brand-text">
+            <div class="brand-tagline">REAL ESTATE CONSULTANT</div>
+            <div class="brand-services">Buy | Sell | Rent - Residential &amp; Commercial</div>
+          </div>
+        </div>
+        <div class="title-block">
+          <div class="rent-receipt-banner">
+            <span>RENT</span>
+            <span>RECEIPT</span>
+          </div>
+          <img src="assets/house.jpg" alt="Property" class="house-img">
+        </div>
+      </header>
+
+      <!-- Receipt No & Date -->
+      <div class="row receipt-meta">
+        <div class="field-inline">
+          <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h5v2H8v-2z"/></svg></span>
+          <label>Receipt No.</label>
+          <input type="text" name="receiptNo" class="line-input" placeholder="">
+        </div>
+        <div class="field-inline">
+          <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11z"/></svg></span>
+          <label>Date</label>
+          <input type="date" name="date" class="line-input">
+        </div>
+      </div>
+
+      <!-- Main fields -->
+      <div class="field-row">
+        <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
+        <label>Received From</label>
+        <input type="text" name="receivedFrom" class="line-input full">
+      </div>
+
+      <div class="field-row">
+        <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg></span>
+        <label>the Sum of</label>
+        <input type="text" name="sumOf" class="line-input full">
+      </div>
+
+      <div class="field-row multi-line">
+        <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.93 13.5h4.14L12 7.98 9.93 13.5zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4.05 16.5l-1.14-3H9.19l-1.12 3H5.96L11 5.5h2.01l5.04 13.5h-2.1z"/></svg></span>
+        <label>Amount (in words)</label>
+        <textarea name="amountWords" class="line-input full textarea-2" rows="2"></textarea>
+      </div>
+
+      <div class="field-row">
+        <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/></svg></span>
+        <label>as Rent for the Month of</label>
+        <input type="text" name="rentMonth" class="line-input full">
+      </div>
+
+      <div class="field-row multi-line">
+        <span class="icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
+        <label>for the Property Located at</label>
+        <textarea name="propertyAddress" class="line-input full textarea-2" rows="2"></textarea>
+      </div>
+
+      <!-- Two columns -->
+      <div class="two-col">
+        <div class="payment-box">
+          <div class="box-header green-header">MODE OF PAYMENT</div>
+          <div class="box-body payment-body">
+            <div class="watermark">
+              <img src="assets/logo.png" alt="">
+            </div>
+            <label class="checkbox-row">
+              <input type="checkbox" name="paymentCash" value="cash">
+              <span>Cash</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="paymentCheque" value="cheque">
+              <span>Cheque No. :</span>
+              <input type="text" name="chequeNo" class="line-input inline-sm">
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="paymentUpi" value="upi">
+              <span>UPI / Bank Transfer</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="paymentOther" value="other">
+              <span>Other :</span>
+              <input type="text" name="paymentOtherText" class="line-input inline-sm">
+            </label>
+          </div>
+        </div>
+
+        <div class="amount-box">
+          <div class="box-header orange-header">AMOUNT DETAILS</div>
+          <table class="amount-table">
+            <tr>
+              <td>Total Amount Received</td>
+              <td><span class="rupee">₹</span><input type="text" name="totalAmount" class="amount-input"></td>
+            </tr>
+            <tr>
+              <td>Advance / Previous Balance</td>
+              <td><span class="minus">(-)</span><input type="text" name="advanceBalance" class="amount-input"></td>
+            </tr>
+            <tr>
+              <td>This Payment</td>
+              <td><span class="plus">(+)</span><input type="text" name="thisPayment" class="amount-input"></td>
+            </tr>
+            <tr class="balance-row">
+              <td>BALANCE (if any)</td>
+              <td><input type="text" name="balance" class="amount-input"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="two-col footer-section">
+        <div class="received-box">
+          <div class="box-header green-header small-header">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Received By
+          </div>
+          <div class="box-body received-body">
+            <div class="received-field"><label>Name</label><input type="text" name="receivedByName" class="line-input full"></div>
+            <div class="received-field"><label>Mobile No.</label><input type="text" name="receivedByMobile" class="line-input full"></div>
+            <div class="received-field"><label>Address</label><textarea name="receivedByAddress" class="line-input full textarea-2" rows="2"></textarea></div>
+            <div class="received-field"><label>Aadhaar / ID No.</label><input type="text" name="receivedByAadhaar" class="line-input full"></div>
+          </div>
+        </div>
+
+        <div class="signature-box">
+          <div class="signature-line">
+            <div class="sig-line"></div>
+            <p>Authorized Signature (Vighnaharta Property)</p>
+          </div>
+          <div class="seal-box">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4z"/></svg>
+            <span>SEAL / STAMP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact bar -->
+      <footer class="contact-bar">
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/></svg>
+          <span>7378 79 6656 &nbsp; 7378 79 6658</span>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>vighnahartaproperty@gmail.com</span>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>
+          <span>Sai Vision, Office No. 28, Pimple Saudagar, Pune - 411027</span>
+        </div>
+        <img src="assets/qr-code.png" alt="QR Code" class="qr-code">
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

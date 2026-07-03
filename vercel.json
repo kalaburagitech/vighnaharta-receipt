@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "vighnaharta-receipt",
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "cleanUrls": true
+}
