@@ -5,6 +5,8 @@
   --orange-light: #fff0e0;
   --text: #222;
   --border: #ccc;
+  --a4-width: 794px;
+  --a4-height: 1123px;
 }
 
 * {
@@ -18,6 +20,7 @@ body {
   background: #e8ecef;
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Toolbar */
@@ -87,12 +90,13 @@ body {
 
 /* Receipt - A4 size */
 .receipt {
-  width: 794px;
-  min-height: 1123px;
+  width: var(--a4-width);
+  min-height: var(--a4-height);
   background: #fff;
   padding: 28px 32px 0;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12);
   position: relative;
+  overflow: hidden;
 }
 
 /* Header */
@@ -234,6 +238,7 @@ body {
   background: transparent;
   outline: none;
   color: #111;
+  min-width: 0;
 }
 
 .line-input:focus {
@@ -249,6 +254,7 @@ body {
   resize: none;
   line-height: 1.5;
   border-bottom: 1.5px solid var(--border);
+  min-height: 34px;
 }
 
 /* Two columns */
@@ -458,6 +464,11 @@ body {
   align-items: center;
   gap: 5px;
   flex: 1;
+  min-width: 0;
+}
+
+.contact-item span {
+  overflow-wrap: anywhere;
 }
 
 .contact-item svg {
@@ -481,44 +492,448 @@ body {
   .toolbar { display: none; }
   body { background: #fff; }
   .page-wrapper { padding: 0; }
-  .receipt { box-shadow: none; }
+  .receipt {
+    width: 210mm;
+    min-height: 297mm;
+    box-shadow: none;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
 }
 
 .pdf-export,
 .pdf-capture {
-  min-height: auto !important;
-  height: auto !important;
+  width: var(--a4-width) !important;
+  min-width: var(--a4-width) !important;
+  max-width: var(--a4-width) !important;
+  height: var(--a4-height) !important;
+  min-height: var(--a4-height) !important;
+  max-height: var(--a4-height) !important;
+  padding: 26px 30px 0 !important;
   box-shadow: none !important;
   background: #fff !important;
+  overflow: hidden !important;
+}
+
+.pdf-capture .receipt-header {
+  margin-bottom: 16px;
+}
+
+.pdf-capture .field-row {
+  margin-bottom: 9px;
+}
+
+.pdf-capture .two-col {
+  margin: 13px 0;
+}
+
+.pdf-capture .payment-body {
+  min-height: 132px;
+}
+
+.pdf-capture .amount-table td {
+  padding: 8px 10px;
+}
+
+.pdf-capture .received-field {
+  margin-bottom: 7px;
+}
+
+.pdf-capture .seal-box {
+  padding: 18px;
+}
+
+.pdf-capture .contact-bar {
+  margin-top: 12px;
+}
+
+.pdf-field-value {
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.pdf-textarea-value {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  max-height: 45px;
 }
 
 /* Responsive */
 @media (max-width: 860px) {
+  .toolbar {
+    padding: 12px;
+    position: static;
+  }
+
+  .toolbar h1 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .toolbar-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .btn {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .page-wrapper {
+    padding: 12px 8px 28px;
+    align-items: flex-start;
+  }
+
   .receipt {
     width: 100%;
+    max-width: 100%;
     min-height: auto;
-    padding: 20px 16px 0;
+    height: auto;
+    padding: 16px 12px 0;
   }
 
   .receipt-header {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .brand {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .brand-logo {
+    width: 92px;
+  }
+
+  .brand-tagline {
+    font-size: 9px;
+  }
+
+  .brand-services {
+    font-size: 10px;
+    margin-top: 4px;
   }
 
   .title-block {
     width: 100%;
   }
 
+  .rent-receipt-banner {
+    min-width: 132px;
+    padding: 12px 28px 12px 14px;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+
   .house-img {
     flex: 1;
+    width: auto;
+    min-width: 0;
+    height: 88px;
+  }
+
+  .receipt-meta,
+  .field-row,
+  .received-field {
+    align-items: flex-start;
+  }
+
+  .receipt-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field-inline,
+  .field-row,
+  .received-field {
+    width: 100%;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 28px minmax(108px, auto) minmax(0, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .field-row label {
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.25;
+    padding-top: 5px;
+  }
+
+  .field-row .line-input.full {
+    width: 100%;
+  }
+
+  .field-row.multi-line .line-input.full {
+    min-height: 44px;
   }
 
   .two-col {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 14px 0;
+  }
+
+  .checkbox-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    line-height: 1.4;
+  }
+
+  .checkbox-row .line-input.inline-sm {
+    flex-basis: 140px;
+  }
+
+  .amount-table td {
+    padding: 9px 8px;
+  }
+
+  .amount-table td:last-child {
+    width: 112px;
+  }
+
+  .amount-input {
+    width: 70px;
+  }
+
+  .footer-section {
+    gap: 14px;
+  }
+
+  .sig-line {
+    height: 34px;
+  }
+
+  .seal-box {
+    padding: 18px;
   }
 
   .contact-bar {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
     margin: 16px -16px 0;
+    padding: 10px 12px;
   }
+
+  .contact-item {
+    grid-column: 1;
+    align-items: flex-start;
+  }
+
+  .qr-code {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 64px;
+  }
+}
+
+@media (max-width: 520px) {
+  .toolbar-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .field-inline {
+    display: grid;
+    grid-template-columns: 28px auto minmax(0, 1fr);
+  }
+
+  .field-inline label {
+    padding-top: 5px;
+  }
+
+  .field-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .field-row label {
+    grid-column: 2;
+    padding-top: 0;
+  }
+
+  .field-row .line-input.full {
+    grid-column: 2;
+  }
+
+  .received-field {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .received-field label {
+    min-width: 0;
+    padding-top: 5px;
+  }
+
+  .brand-logo {
+    width: 78px;
+  }
+
+  .rent-receipt-banner {
+    min-width: 116px;
+    font-size: 17px;
+  }
+
+  .house-img {
+    height: 78px;
+  }
+}
+
+/* Keep PDF capture as a single A4 receipt even when downloaded on mobile. */
+.pdf-capture.receipt {
+  width: var(--a4-width) !important;
+  min-width: var(--a4-width) !important;
+  max-width: var(--a4-width) !important;
+  height: var(--a4-height) !important;
+  min-height: var(--a4-height) !important;
+  max-height: var(--a4-height) !important;
+  padding: 26px 30px 0 !important;
+}
+
+.pdf-capture .receipt-header {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 0 !important;
+  margin-bottom: 16px !important;
+}
+
+.pdf-capture .brand {
+  width: auto !important;
+  gap: 14px !important;
+}
+
+.pdf-capture .brand-logo {
+  width: 130px !important;
+}
+
+.pdf-capture .brand-tagline {
+  font-size: 10px !important;
+}
+
+.pdf-capture .brand-services {
+  font-size: 11px !important;
+  margin-top: 8px !important;
+}
+
+.pdf-capture .title-block {
+  width: auto !important;
+}
+
+.pdf-capture .rent-receipt-banner {
+  min-width: 160px !important;
+  padding: 16px 36px 16px 20px !important;
+  font-size: 26px !important;
+  letter-spacing: 2px !important;
+}
+
+.pdf-capture .house-img {
+  width: 200px !important;
+  height: 110px !important;
+  flex: 0 0 auto !important;
+}
+
+.pdf-capture .receipt-meta {
+  flex-direction: row !important;
+  gap: 24px !important;
+  margin-bottom: 12px !important;
+}
+
+.pdf-capture .field-inline {
+  display: flex !important;
+  align-items: center !important;
+  width: auto !important;
+}
+
+.pdf-capture .field-row {
+  display: flex !important;
+  align-items: center !important;
+  grid-template-columns: none !important;
+  gap: 10px !important;
+  margin-bottom: 9px !important;
+}
+
+.pdf-capture .field-row.multi-line {
+  align-items: flex-start !important;
+}
+
+.pdf-capture .field-row label {
+  min-width: 160px !important;
+  white-space: nowrap !important;
+  padding-top: 0 !important;
+}
+
+.pdf-capture .field-row .line-input.full {
+  grid-column: auto !important;
+}
+
+.pdf-capture .two-col {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+  margin: 13px 0 !important;
+}
+
+.pdf-capture .checkbox-row {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.pdf-capture .amount-table td {
+  padding: 8px 10px !important;
+}
+
+.pdf-capture .amount-table td:last-child {
+  width: 130px !important;
+}
+
+.pdf-capture .amount-input {
+  width: 90px !important;
+}
+
+.pdf-capture .received-field {
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 7px !important;
+}
+
+.pdf-capture .received-field label {
+  min-width: 90px !important;
+  padding-top: 0 !important;
+}
+
+.pdf-capture .sig-line {
+  height: 40px !important;
+}
+
+.pdf-capture .seal-box {
+  padding: 18px !important;
+}
+
+.pdf-capture .contact-bar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  grid-template-columns: none !important;
+  margin: 12px -30px 0 !important;
+}
+
+.pdf-capture .contact-item {
+  grid-column: auto !important;
+  align-items: center !important;
+}
+
+.pdf-capture .qr-code {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  width: 72px !important;
 }

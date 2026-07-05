@@ -1,4 +1,6 @@
 const STORAGE_KEY = 'vighnaharta_receipt_data';
+const A4_WIDTH_PX = 794;
+const A4_HEIGHT_PX = 1123;
 
 const formFields = [
   'receiptNo', 'date', 'receivedFrom', 'sumOf', 'amountWords',
@@ -85,26 +87,27 @@ function formatDateForDisplay(dateStr) {
 function swapFieldsForPdf(receipt) {
   const changes = [];
 
-  function addSwap(input, span) {
+  function addSwap(input, span, display = 'none') {
+    const oldDisplay = input.style.display;
     input.style.display = 'none';
     input.parentNode.insertBefore(span, input);
-    changes.push({ input, span });
+    changes.push({ input, span, oldDisplay });
   }
 
-  receipt.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
+  receipt.querySelectorAll('input[type="text"]:not(.amount-input), input[type="date"]').forEach(input => {
     const span = document.createElement('span');
     span.className = 'pdf-field-value';
     const val = input.type === 'date' ? formatDateForDisplay(input.value) : input.value;
     span.textContent = val || '\u00A0';
-    span.style.cssText = 'font-size:13px;font-weight:600;display:inline-block;min-width:80px;padding:4px 6px;border-bottom:1.5px solid #ccc;flex:1;';
+    span.style.cssText = 'font-size:12px;font-weight:600;display:inline-block;min-width:0;padding:3px 5px;border-bottom:1.5px solid #ccc;flex:1;line-height:1.35;white-space:nowrap;text-overflow:ellipsis;';
     addSwap(input, span);
   });
 
   receipt.querySelectorAll('textarea').forEach(ta => {
     const span = document.createElement('div');
-    span.className = 'pdf-field-value';
+    span.className = 'pdf-field-value pdf-textarea-value';
     span.textContent = ta.value || '\u00A0';
-    span.style.cssText = 'font-size:13px;font-weight:600;padding:4px 6px;border-bottom:1.5px solid #ccc;line-height:1.5;flex:1;min-height:28px;white-space:pre-wrap;';
+    span.style.cssText = 'font-size:12px;font-weight:600;padding:3px 5px;border-bottom:1.5px solid #ccc;line-height:1.35;flex:1;min-height:28px;white-space:pre-wrap;';
     addSwap(ta, span);
   });
 
@@ -112,13 +115,13 @@ function swapFieldsForPdf(receipt) {
     const span = document.createElement('span');
     span.className = 'pdf-field-value';
     span.textContent = input.value || '\u00A0';
-    span.style.cssText = 'font-size:12px;font-weight:600;display:inline-block;min-width:40px;text-align:right;';
+    span.style.cssText = 'font-size:11px;font-weight:600;display:inline-block;min-width:40px;max-width:82px;text-align:right;white-space:nowrap;text-overflow:ellipsis;';
     addSwap(input, span);
   });
 
-  return () => changes.forEach(({ input, span }) => {
+  return () => changes.forEach(({ input, span, oldDisplay }) => {
     span.remove();
-    input.style.display = '';
+    input.style.display = oldDisplay;
   });
 }
 
@@ -138,6 +141,7 @@ function waitForImages(container) {
 async function downloadPdf() {
   const btn = document.getElementById('pdfBtn');
   const receipt = document.getElementById('receipt');
+  let restoreFields = null;
 
   btn.disabled = true;
   showStatus('Generating PDF...');
@@ -146,7 +150,7 @@ async function downloadPdf() {
   receipt.scrollIntoView({ behavior: 'instant', block: 'start' });
   window.scrollTo(0, 0);
 
-  const restoreFields = swapFieldsForPdf(receipt);
+  restoreFields = swapFieldsForPdf(receipt);
 
   await waitForImages(receipt);
   await new Promise(r => setTimeout(r, 200));
@@ -161,30 +165,34 @@ async function downloadPdf() {
       allowTaint: true,
       backgroundColor: '#ffffff',
       logging: false,
-      imageTimeout: 0
+      imageTimeout: 0,
+      width: A4_WIDTH_PX,
+      height: A4_HEIGHT_PX,
+      windowWidth: A4_WIDTH_PX,
+      windowHeight: A4_HEIGHT_PX,
+      scrollX: 0,
+      scrollY: 0
     });
 
     restoreFields();
+    restoreFields = null;
     receipt.classList.remove('pdf-capture');
 
     const imgData = canvas.toDataURL('image/jpeg', 0.98);
     const { jsPDF } = window.jspdf;
 
-    const pdfWidth = 794;
-    const pdfHeight = Math.ceil((canvas.height * pdfWidth) / canvas.width);
-
     const pdf = new jsPDF({
       unit: 'px',
-      format: [pdfWidth, pdfHeight],
+      format: [A4_WIDTH_PX, A4_HEIGHT_PX],
       orientation: 'portrait',
       compress: true
     });
 
-    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_PX, A4_HEIGHT_PX, undefined, 'FAST');
     pdf.save(filename);
     showStatus('PDF downloaded!');
   } catch (err) {
-    restoreFields();
+    if (restoreFields) restoreFields();
     receipt.classList.remove('pdf-capture');
     showStatus('PDF generation failed. Try again.', true);
     console.error(err);
